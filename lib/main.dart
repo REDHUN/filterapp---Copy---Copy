@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/filter_screen.dart';
 import 'view_models/filter_view_model.dart';
+import 'views/filter_screen.dart';
 
 void main() {
   runApp(const MyApp());

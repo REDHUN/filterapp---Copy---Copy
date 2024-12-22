@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../constants/color_palette.dart';
+import '../constants/size_constants.dart';
 import '../models/filter_option.dart';
 import '../models/filter_section.dart';
 import '../screens/results_screen.dart';
@@ -14,19 +16,16 @@ class FilterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorPalette.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorPalette.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
         title: const Text(
           'Filter Options',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
+            color: ColorPalette.black,
+            fontSize: Sizes.fontTitle,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -46,18 +45,18 @@ class FilterScreen extends StatelessWidget {
                     'Error: ${viewModel.error}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
+                      color: ColorPalette.textError,
+                      fontSize: Sizes.fontBody,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: Sizes.spacing),
                   ElevatedButton(
                     onPressed: () => viewModel.fetchFilters(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
+                      backgroundColor: ColorPalette.purple,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
+                        horizontal: Sizes.paddingHorizontal,
+                        vertical: Sizes.paddingVertical,
                       ),
                     ),
                     child: const Text('Retry'),
@@ -71,10 +70,10 @@ class FilterScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(Sizes.padding),
                   children: [
                     _buildSortBySection(viewModel),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: Sizes.spacingLarge),
                     ...viewModel.sections.map((section) =>
                         _buildFilterSection(context, section, viewModel)),
                   ],
@@ -95,12 +94,12 @@ class FilterScreen extends StatelessWidget {
         const Text(
           'Sort by',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: Sizes.fontTitle,
             fontWeight: FontWeight.w600,
-            color: Colors.black87,
+            color: ColorPalette.textPrimary,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: Sizes.spacing),
         ...[
           'Nearest to Me (default)',
           'Trending this Week',
@@ -113,22 +112,22 @@ class FilterScreen extends StatelessWidget {
 
   Widget _buildRadioTile(String title, FilterViewModel viewModel) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: Sizes.spacingSmall),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(Sizes.radiusMedium),
         color: viewModel.sortByDisplay == title
-            ? Colors.purple.withOpacity(0.1)
+            ? ColorPalette.purpleOverlay
             : Colors.transparent,
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
         title: Text(
           title,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: Sizes.fontBody,
             color: viewModel.sortByDisplay == title
-                ? Colors.purple
-                : Colors.black87,
+                ? ColorPalette.purple
+                : ColorPalette.textPrimary,
             fontWeight: viewModel.sortByDisplay == title
                 ? FontWeight.w600
                 : FontWeight.normal,
@@ -138,7 +137,7 @@ class FilterScreen extends StatelessWidget {
           value: title,
           groupValue: viewModel.sortByDisplay,
           onChanged: (value) => viewModel.setSortBy(value!),
-          activeColor: Colors.purple,
+          activeColor: ColorPalette.purple,
         ),
       ),
     );
@@ -147,28 +146,29 @@ class FilterScreen extends StatelessWidget {
   Widget _buildFilterSection(
       BuildContext context, FilterSection section, FilterViewModel viewModel) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: Sizes.spacing),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+        borderRadius: BorderRadius.circular(Sizes.radiusMedium),
+        border: Border.all(color: ColorPalette.borderColor),
       ),
       child: Column(
         children: [
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: Sizes.padding),
             title: Text(
               section.selectedCount != null
                   ? '${section.title} (${section.selectedCount})'
                   : section.title,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: Sizes.fontSectionTitle,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: ColorPalette.textPrimary,
               ),
             ),
             trailing: Icon(
               section.isExpanded ? Icons.expand_less : Icons.expand_more,
-              color: Colors.purple,
+              color: ColorPalette.purple,
             ),
             onTap: () => viewModel.toggleSection(section.title),
           ),
@@ -190,26 +190,27 @@ class FilterScreen extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: option.isSelected
-            ? Colors.purple.withOpacity(0.1)
-            : Colors.transparent,
+        color:
+            option.isSelected ? ColorPalette.purpleOverlay : Colors.transparent,
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
         title: Text(
           option.title,
           style: TextStyle(
-            fontSize: 16,
-            color: option.isSelected ? Colors.purple : Colors.black87,
+            fontSize: Sizes.fontBody,
+            color: option.isSelected
+                ? ColorPalette.purple
+                : ColorPalette.textPrimary,
             fontWeight: option.isSelected ? FontWeight.w500 : FontWeight.normal,
           ),
         ),
         leading: Checkbox(
           value: option.isSelected,
           onChanged: (value) => viewModel.toggleOption(sectionTitle, option.id),
-          activeColor: Colors.purple,
+          activeColor: ColorPalette.purple,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(Sizes.radiusSmall),
           ),
         ),
       ),
@@ -220,14 +221,14 @@ class FilterScreen extends StatelessWidget {
     return Consumer<FilterViewModel>(
       builder: (context, viewModel, child) {
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(Sizes.padding),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ColorPalette.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, -4),
+                color: ColorPalette.shadowColor,
+                blurRadius: Sizes.shadowBlur,
+                offset: const Offset(0, -Sizes.shadowOffset),
               ),
             ],
           ),
@@ -246,7 +247,7 @@ class FilterScreen extends StatelessWidget {
                 );
 
                 final results =
-                    await FilterService().fetchFilteredResults(filters);
+                    await FilterService().getFilteredResults(filters);
 
                 if (context.mounted) {
                   Navigator.pushReplacement(
@@ -269,18 +270,18 @@ class FilterScreen extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4B4B4B),
-              minimumSize: const Size(double.infinity, 54),
+              backgroundColor: ColorPalette.buttonPrimary,
+              minimumSize: const Size(double.infinity, Sizes.buttonHeight),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(27),
+                borderRadius: BorderRadius.circular(Sizes.radiusButton),
               ),
               elevation: 0,
             ),
             child: Text(
               'SHOW ${viewModel.totalResults} RESULTS',
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
+                color: ColorPalette.white,
+                fontSize: Sizes.fontBody,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
               ),
@@ -293,66 +294,68 @@ class FilterScreen extends StatelessWidget {
 
   Widget _buildLoadingShimmer() {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: ColorPalette.shimmerBase,
+      highlightColor: ColorPalette.shimmerHighlight,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(Sizes.padding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Sort by section shimmer
             Container(
-              height: 24,
-              width: 100,
+              height: Sizes.shimmerTitleHeight,
+              width: Sizes.shimmerTitleWidth,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
+                color: ColorPalette.white,
+                borderRadius: BorderRadius.circular(Sizes.radiusSmall),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: Sizes.spacing),
             // Sort options shimmer
             ...List.generate(
               4,
               (index) => Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                height: 56,
+                margin: const EdgeInsets.only(bottom: Sizes.spacingSmall),
+                height: Sizes.listTileHeight,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: ColorPalette.white,
+                  borderRadius: BorderRadius.circular(Sizes.radiusMedium),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: Sizes.spacingLarge),
             // Filter sections shimmer
             ...List.generate(
               5,
               (index) => Container(
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: Sizes.spacing),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  color: ColorPalette.white,
+                  borderRadius: BorderRadius.circular(Sizes.radiusMedium),
                 ),
                 child: Column(
                   children: [
                     Container(
-                      height: 56,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      height: Sizes.listTileHeight,
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Sizes.padding),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: 120,
-                            height: 20,
+                            width: Sizes.shimmerOptionWidth,
+                            height: Sizes.shimmerTitleHeight,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
+                              color: ColorPalette.white,
+                              borderRadius:
+                                  BorderRadius.circular(Sizes.radiusSmall),
                             ),
                           ),
                           Container(
-                            width: 24,
-                            height: 24,
+                            width: Sizes.shimmerIconSize,
+                            height: Sizes.shimmerIconSize,
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: ColorPalette.white,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -364,25 +367,27 @@ class FilterScreen extends StatelessWidget {
                       ...List.generate(
                         4,
                         (index) => Container(
-                          height: 56,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          height: Sizes.listTileHeight,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Sizes.padding),
                           child: Row(
                             children: [
                               Container(
-                                width: 24,
-                                height: 24,
+                                width: Sizes.shimmerIconSize,
+                                height: Sizes.shimmerIconSize,
                                 decoration: const BoxDecoration(
-                                  color: Colors.white,
+                                  color: ColorPalette.white,
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              const SizedBox(width: Sizes.spacing),
                               Container(
-                                width: 150,
-                                height: 16,
+                                width: Sizes.shimmerTextWidth,
+                                height: Sizes.shimmerOptionHeight,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
+                                  color: ColorPalette.white,
+                                  borderRadius:
+                                      BorderRadius.circular(Sizes.radiusSmall),
                                 ),
                               ),
                             ],

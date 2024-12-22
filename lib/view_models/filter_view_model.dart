@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../models/filter_section.dart';
+import '../models/venue_result.dart';
 import '../services/filter_service.dart';
 
 class FilterViewModel extends ChangeNotifier {
-  final FilterService _filterService = FilterService();
+  final FilterService _filterService;
   List<FilterSection> _sections = [];
   String _sortBy = 'nearest_to_me';
   bool _isLoading = false;
@@ -32,7 +35,8 @@ class FilterViewModel extends ChangeNotifier {
     return count;
   }
 
-  FilterViewModel() {
+  FilterViewModel({FilterService? filterService})
+      : _filterService = filterService ?? FilterService() {
     fetchFilters();
   }
 
@@ -42,13 +46,28 @@ class FilterViewModel extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      _sections = await _filterService.fetchFilters();
+      _sections = await _filterService.getFilters();
       notifyListeners();
     } catch (e) {
-      _error = e.toString();
+      if (e is SocketException) {
+        _error = 'no_internet';
+      } else {
+        _error = 'An unexpected error occurred. Please try again.';
+      }
+      notifyListeners();
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<List<VenueResult>> getFilteredResults() async {
+    try {
+      return await _filterService.getFilteredResults(getFiltersForApi());
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return [];
     }
   }
 
