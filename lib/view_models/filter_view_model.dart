@@ -14,13 +14,13 @@ class FilterViewModel extends ChangeNotifier {
   String? _error;
 
   final Map<String, List<String>> _selectedFilters = {
-    'cuisine': [],
-    'suitable-diet': [],
-    'experience': [],
-    'mealperiod': [],
-    'attire': [],
-    'location': [],
-    'pricerange': [],
+    //  'cuisine': [],
+    //'suitable-diet': [],
+    // 'experience': [],
+    ///  'mealperiod': [],
+    // 'attire': [],
+    // 'location': [],
+    // 'pricerange': [],
   };
 
   List<FilterSection> get sections => _sections;
@@ -92,40 +92,40 @@ class FilterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSortBy(String value) {
-    switch (value) {
-      case 'Nearest to Me (default)':
-        _sortBy = 'nearest_to_me';
-        break;
-      case 'Trending this Week':
-        _sortBy = 'trending';
-        break;
-      case 'Newest Added':
-        _sortBy = 'newest_first';
-        break;
-      case 'Alphabetical':
-        _sortBy = 'title_a_z';
-        break;
-      default:
-        _sortBy = 'nearest_to_me';
-    }
-    notifyListeners();
-  }
+  // void setSortBy(String value) {
+  //   switch (value) {
+  //     case 'Nearest to Me (default)':
+  //       _sortBy = 'nearest_to_me';
+  //       break;
+  //     case 'Trending this Week':
+  //       _sortBy = 'trending';
+  //       break;
+  //     case 'Newest Added':
+  //       _sortBy = 'newest_first';
+  //       break;
+  //     case 'Alphabetical':
+  //       _sortBy = 'title_a_z';
+  //       break;
+  //     default:
+  //       _sortBy = 'nearest_to_me';
+  //   }
+  //   notifyListeners();
+  // }
 
-  String get sortByDisplay {
-    switch (_sortBy) {
-      case 'nearest_to_me':
-        return 'Nearest to Me (default)';
-      case 'trending':
-        return 'Trending this Week';
-      case 'newest_first':
-        return 'Newest Added';
-      case 'title_a_z':
-        return 'Alphabetical';
-      default:
-        return 'Nearest to Me (default)';
-    }
-  }
+  // String get sortByDisplay {
+  //   switch (_sortBy) {
+  //     case 'nearest_to_me':
+  //       return 'Nearest to Me (default)';
+  //     case 'trending':
+  //       return 'Trending this Week';
+  //     case 'newest_first':
+  //       return 'Newest Added';
+  //     case 'title_a_z':
+  //       return 'Alphabetical';
+  //     default:
+  //       return 'Nearest to Me (default)';
+  //   }
+  // }
 
   Map<String, dynamic> getFiltersForApi() {
     final Map<String, dynamic> filters = {};

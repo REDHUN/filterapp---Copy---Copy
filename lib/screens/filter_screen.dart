@@ -6,8 +6,6 @@ import '../constants/color_palette.dart';
 import '../constants/size_constants.dart';
 import '../models/filter_option.dart';
 import '../models/filter_section.dart';
-import '../screens/results_screen.dart';
-import '../services/filter_service.dart';
 import '../view_models/filter_view_model.dart';
 
 class FilterScreen extends StatelessWidget {
@@ -72,7 +70,7 @@ class FilterScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(Sizes.padding),
                   children: [
-                    _buildSortBySection(viewModel),
+                    //  _buildSortBySection(viewModel),
                     const SizedBox(height: Sizes.spacingLarge),
                     ...viewModel.sections.map((section) =>
                         _buildFilterSection(context, section, viewModel)),
@@ -87,61 +85,61 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSortBySection(FilterViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Sort by',
-          style: TextStyle(
-            fontSize: Sizes.fontTitle,
-            fontWeight: FontWeight.w600,
-            color: ColorPalette.textPrimary,
-          ),
-        ),
-        const SizedBox(height: Sizes.spacing),
-        ...[
-          'Nearest to Me (default)',
-          'Trending this Week',
-          'Newest Added',
-          'Alphabetical'
-        ].map((title) => _buildRadioTile(title, viewModel)),
-      ],
-    );
-  }
+  // Widget _buildSortBySection(FilterViewModel viewModel) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       const Text(
+  //         'Sort by',
+  //         style: TextStyle(
+  //           fontSize: Sizes.fontTitle,
+  //           fontWeight: FontWeight.w600,
+  //           color: ColorPalette.textPrimary,
+  //         ),
+  //       ),
+  //       const SizedBox(height: Sizes.spacing),
+  //       ...[
+  //         'Nearest to Me (default)',
+  //         'Trending this Week',
+  //         'Newest Added',
+  //         'Alphabetical'
+  //       ].map((title) => _buildRadioTile(title, viewModel)),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildRadioTile(String title, FilterViewModel viewModel) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: Sizes.spacingSmall),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(Sizes.radiusMedium),
-        color: viewModel.sortByDisplay == title
-            ? ColorPalette.purpleOverlay
-            : Colors.transparent,
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: Sizes.fontBody,
-            color: viewModel.sortByDisplay == title
-                ? ColorPalette.purple
-                : ColorPalette.textPrimary,
-            fontWeight: viewModel.sortByDisplay == title
-                ? FontWeight.w600
-                : FontWeight.normal,
-          ),
-        ),
-        leading: Radio<String>(
-          value: title,
-          groupValue: viewModel.sortByDisplay,
-          onChanged: (value) => viewModel.setSortBy(value!),
-          activeColor: ColorPalette.purple,
-        ),
-      ),
-    );
-  }
+  // Widget _buildRadioTile(String title, FilterViewModel viewModel) {
+  //   return Container(
+  //     margin: const EdgeInsets.only(bottom: Sizes.spacingSmall),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(Sizes.radiusMedium),
+  //       // color: viewModel.sortByDisplay == title
+  //       //     ? ColorPalette.purpleOverlay
+  //       //     : Colors.transparent,
+  //     ),
+  //     child: ListTile(
+  //       contentPadding: const EdgeInsets.symmetric(horizontal: Sizes.padding),
+  //       title: Text(
+  //         title,
+  //         style: TextStyle(
+  //           fontSize: Sizes.fontBody,
+  //           color: viewModel.sortByDisplay == title
+  //               ? ColorPalette.purple
+  //               : ColorPalette.textPrimary,
+  //           fontWeight: viewModel.sortByDisplay == title
+  //               ? FontWeight.w600
+  //               : FontWeight.normal,
+  //         ),
+  //       ),
+  //       leading: Radio<String>(
+  //         value: title,
+  //         groupValue: viewModel.sortByDisplay,
+  //         onChanged: (value) => viewModel.setSortBy(value!),
+  //         activeColor: ColorPalette.purple,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildFilterSection(
       BuildContext context, FilterSection section, FilterViewModel viewModel) {
@@ -233,42 +231,7 @@ class FilterScreen extends StatelessWidget {
             ],
           ),
           child: ElevatedButton(
-            onPressed: () async {
-              final filters = viewModel.getFiltersForApi();
-              try {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ResultsScreen(
-                      results: [],
-                      isLoading: true,
-                    ),
-                  ),
-                );
-
-                final results =
-                    await FilterService().getFilteredResults(filters);
-
-                if (context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ResultsScreen(
-                        results: results,
-                        isLoading: false,
-                      ),
-                    ),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
-                  );
-                }
-              }
-            },
+            onPressed: () async {},
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorPalette.buttonPrimary,
               minimumSize: const Size(double.infinity, Sizes.buttonHeight),

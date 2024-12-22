@@ -5,7 +5,6 @@ import 'package:shimmer/shimmer.dart';
 import '../models/filter_option.dart';
 import '../models/filter_section.dart';
 import '../view_models/filter_view_model.dart';
-import '../widgets/no_internet_screen.dart';
 
 class FilterScreen extends StatelessWidget {
   const FilterScreen({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class FilterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -35,7 +34,8 @@ class FilterScreen extends StatelessWidget {
           }
 
           if (viewModel.error != null) {
-            return NoInternetScreen(
+            return ErrorView(
+              error: viewModel.error!,
               onRetry: viewModel.fetchFilters,
             );
           }
@@ -44,7 +44,7 @@ class FilterScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               SelectedFiltersSection(viewModel: viewModel),
-              SortBySection(viewModel: viewModel),
+              //  SortBySection(viewModel: viewModel),
               const SizedBox(height: 24),
               ...viewModel.sections.map((section) =>
                   FilterSectionWidget(section: section, viewModel: viewModel)),
@@ -58,79 +58,96 @@ class FilterScreen extends StatelessWidget {
   }
 }
 
-class SortBySection extends StatelessWidget {
-  final FilterViewModel viewModel;
+// class SortBySection extends StatelessWidget {
+//   final FilterViewModel viewModel;
 
-  const SortBySection({Key? key, required this.viewModel}) : super(key: key);
+//   const SortBySection({Key? key, required this.viewModel}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Sort by',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: Colors.black87,
-            letterSpacing: -0.5,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ...[
-          'Nearest to Me (default)',
-          'Trending this Week',
-          'Newest Added',
-          'Alphabetical'
-        ].map((title) => SortRadioTile(title: title, viewModel: viewModel)),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 16),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(8),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.05),
+//             blurRadius: 2,
+//             offset: const Offset(0, 1),
+//           ),
+//         ],
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             const Text(
+//               'Sort by',
+//               style: TextStyle(
+//                 fontSize: 24,
+//                 fontWeight: FontWeight.w700,
+//                 color: Colors.black87,
+//                 letterSpacing: -0.5,
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             ...[
+//               'Nearest to Me (default)',
+//               'Trending this Week',
+//               'Newest Added',
+//               'Alphabetical'
+//             ].map((title) => SortRadioTile(title: title, viewModel: viewModel)),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class SortRadioTile extends StatelessWidget {
-  final String title;
-  final FilterViewModel viewModel;
+// class SortRadioTile extends StatelessWidget {
+//   final String title;
+//   final FilterViewModel viewModel;
 
-  const SortRadioTile({
-    Key? key,
-    required this.title,
-    required this.viewModel,
-  }) : super(key: key);
+//   const SortRadioTile({
+//     Key? key,
+//     required this.title,
+//     required this.viewModel,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = viewModel.sortByDisplay == title;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 17,
-            color: isSelected ? Colors.grey[800] : Colors.black87,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            letterSpacing: -0.3,
-          ),
-        ),
-        leading: Theme(
-          data: ThemeData(
-            unselectedWidgetColor: Colors.grey[400],
-          ),
-          child: Radio<String>(
-            value: title,
-            groupValue: viewModel.sortByDisplay,
-            onChanged: (value) => viewModel.setSortBy(value!),
-            activeColor: Colors.grey[800],
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final isSelected = viewModel.sortByDisplay == title;
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 12),
+//       child: ListTile(
+//         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+//         title: Text(
+//           title,
+//           style: TextStyle(
+//             fontSize: 17,
+//             color: isSelected ? Colors.grey[800] : Colors.black87,
+//             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+//             letterSpacing: -0.3,
+//           ),
+//         ),
+//         leading: Theme(
+//           data: ThemeData(
+//             unselectedWidgetColor: Colors.grey[400],
+//           ),
+//           child: Radio<String>(
+//             value: title,
+//             groupValue: viewModel.sortByDisplay,
+//             onChanged: (value) => viewModel.setSortBy(value!),
+//             activeColor: Colors.grey[800],
+//             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class FilterSectionWidget extends StatelessWidget {
   final FilterSection section;
@@ -144,40 +161,53 @@ class FilterSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate selected count for this section
     final selectedCount =
         section.options.where((option) => option.isSelected).length;
     final showCount = selectedCount > 0;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              showCount ? '${section.title} ($selectedCount)' : section.title,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
-                letterSpacing: -0.5,
-                height: 1.2,
-              ),
-            ),
-            trailing: Icon(
-              section.isExpanded ? Icons.expand_less : Icons.expand_more,
-              color: Colors.grey[600],
-            ),
-            onTap: () => viewModel.toggleSection(section.title),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
           ),
-          if (section.isExpanded)
-            ...section.options.map((option) => FilterOptionTile(
-                option: option,
-                sectionTitle: section.title,
-                viewModel: viewModel)),
         ],
+      ),
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                showCount ? '${section.title} ($selectedCount)' : section.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                  letterSpacing: -0.5,
+                  height: 1.2,
+                ),
+              ),
+              trailing: Icon(
+                section.isExpanded ? Icons.expand_less : Icons.expand_more,
+                color: Colors.grey[600],
+              ),
+              onTap: () => viewModel.toggleSection(section.title),
+            ),
+            if (section.isExpanded)
+              ...section.options.map((option) => FilterOptionTile(
+                  option: option,
+                  sectionTitle: section.title,
+                  viewModel: viewModel)),
+          ],
+        ),
       ),
     );
   }
@@ -303,6 +333,34 @@ class LoadingShimmer extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ErrorView extends StatelessWidget {
+  final String error;
+  final VoidCallback onRetry;
+
+  const ErrorView({Key? key, required this.error, required this.onRetry})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Error: $error',
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: onRetry,
+            child: const Text('Retry'),
+          ),
+        ],
       ),
     );
   }
